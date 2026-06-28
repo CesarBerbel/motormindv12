@@ -91,7 +91,7 @@ export function WorkshopCard() {
 
         <WorkshopForm
           onDirtyChange={setFormDirty}
-          onSaved={() => setFormDirty(false)}
+          onSaved={forceClose}
         />
       </Drawer>
     </>
