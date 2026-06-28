@@ -94,7 +94,6 @@ model Workshop {
   phone        String?
   whatsapp     String?
   email        String?
-  website      String?
   logoUrl      String?  @db.Text
   zipCode      String?
   street       String?

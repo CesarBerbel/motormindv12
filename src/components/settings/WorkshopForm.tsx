@@ -204,9 +204,21 @@ export function WorkshopForm({ onSaved }: { onSaved?: () => void }) {
           <Field label="E-mail Comercial" id="email" error={errors.email?.message}>
             <Input id="email" type="email" placeholder="contato@oficina.com" {...register("email")} />
           </Field>
-          <Field label="Website" id="website">
-            <Input id="website" placeholder="https://www.suaoficina.com.br" {...register("website")} />
-          </Field>
+          <div className="space-y-1.5">
+            <Label>Site público</Label>
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 text-sm text-brand-400 hover:text-brand-300 transition-colors truncate"
+            >
+              <svg className="size-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+              Abrir página pública
+            </a>
+          </div>
         </div>
       </Section>
 

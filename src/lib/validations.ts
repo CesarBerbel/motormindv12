@@ -41,7 +41,6 @@ export const workshopSchema = z.object({
   phone: z.string().optional(),
   whatsapp: z.string().optional(),
   email: z.string().email("E-mail inválido").optional().or(z.literal("")),
-  website: z.string().optional(),
   logoUrl: z.string().optional(),
   zipCode: z.string().optional(),
   street: z.string().optional(),
