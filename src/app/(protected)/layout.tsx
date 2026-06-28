@@ -1,0 +1,15 @@
+import { auth } from "@/auth"
+import { redirect } from "next/navigation"
+import { DashboardNav } from "@/components/layout/DashboardNav"
+
+export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth()
+  if (!session) redirect("/login")
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-white">
+      <DashboardNav user={session.user} />
+      <main className="pt-16">{children}</main>
+    </div>
+  )
+}
