@@ -31,6 +31,7 @@ export function WorkshopCard() {
         onClose={() => setOpen(false)}
         title="Dados da Oficina"
         description="Preencha as informações do seu estabelecimento"
+        width="max-w-3xl"
       >
         <WorkshopForm onSaved={() => setOpen(false)} />
       </Drawer>
