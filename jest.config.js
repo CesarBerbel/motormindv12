@@ -21,7 +21,7 @@ const config = {
     "!src/**/*.d.ts",
     "!src/app/layout.tsx",
   ],
-  coverageThresholds: {
+  coverageThreshold: {
     global: {
       branches: 70,
       functions: 70,
