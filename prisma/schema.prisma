@@ -85,6 +85,31 @@ model PasswordResetToken {
   @@map("password_reset_tokens")
 }
 
+model Workshop {
+  id           String   @id @default("singleton")
+  name         String
+  tradeName    String?
+  cnpj         String?
+  stateReg     String?
+  phone        String?
+  whatsapp     String?
+  email        String?
+  website      String?
+  logoUrl      String?  @db.Text
+  zipCode      String?
+  street       String?
+  number       String?
+  complement   String?
+  neighborhood String?
+  city         String?
+  state        String?
+  country      String   @default("Brasil")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("workshops")
+}
+
 enum Role {
   USER
   ADMIN

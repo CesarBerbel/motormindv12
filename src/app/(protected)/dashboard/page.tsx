@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { auth } from "@/auth"
-import { BarChart3, Users, TrendingUp, Activity } from "lucide-react"
+import { BarChart3, Users, TrendingUp, Activity, Settings, ChevronRight } from "lucide-react"
 
 export const metadata: Metadata = { title: "Dashboard" }
 
@@ -53,6 +54,23 @@ export default async function DashboardPage() {
         <div className="h-48 flex items-center justify-center border border-dashed border-white/10 rounded-xl">
           <p className="text-slate-500 text-sm">Gráficos serão exibidos aqui</p>
         </div>
+      </div>
+
+      {/* Acesso rápido */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <Link
+          href="/settings"
+          className="glass rounded-2xl border border-white/10 p-5 flex items-center gap-4 hover:border-brand-500/30 hover:bg-white/5 transition-all group"
+        >
+          <div className="size-11 rounded-xl bg-slate-700/60 flex items-center justify-center shrink-0 group-hover:bg-brand-500/20 transition-colors">
+            <Settings className="size-5 text-slate-300 group-hover:text-brand-400 transition-colors" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-white">Configurações</p>
+            <p className="text-xs text-slate-500 mt-0.5">Dados da oficina</p>
+          </div>
+          <ChevronRight className="size-4 text-slate-600 group-hover:text-slate-400 group-hover:translate-x-0.5 transition-all" />
+        </Link>
       </div>
 
       {/* Atividade recente */}

@@ -33,6 +33,27 @@ export const resetPasswordSchema = z
     path: ["confirmPassword"],
   })
 
+export const workshopSchema = z.object({
+  name: z.string().min(1, "Nome da oficina é obrigatório"),
+  tradeName: z.string().optional(),
+  cnpj: z.string().optional(),
+  stateReg: z.string().optional(),
+  phone: z.string().optional(),
+  whatsapp: z.string().optional(),
+  email: z.string().email("E-mail inválido").optional().or(z.literal("")),
+  website: z.string().optional(),
+  logoUrl: z.string().optional(),
+  zipCode: z.string().optional(),
+  street: z.string().optional(),
+  number: z.string().optional(),
+  complement: z.string().optional(),
+  neighborhood: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  country: z.string().default("Brasil"),
+})
+
 export type SignInInput = z.infer<typeof signInSchema>
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>
+export type WorkshopInput = z.infer<typeof workshopSchema>
