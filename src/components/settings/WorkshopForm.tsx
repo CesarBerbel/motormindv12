@@ -64,7 +64,13 @@ function Field({ label, id, error, children, className }: {
 }
 
 // ── Componente principal ──────────────────────────────────────
-export function WorkshopForm({ onSaved }: { onSaved?: () => void }) {
+export function WorkshopForm({
+  onSaved,
+  onDirtyChange,
+}: {
+  onSaved?: () => void
+  onDirtyChange?: (dirty: boolean) => void
+}) {
   const { toast } = useToast()
   const [searchingCEP, setSearchingCEP] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -75,7 +81,7 @@ export function WorkshopForm({ onSaved }: { onSaved?: () => void }) {
     setValue,
     watch,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<WorkshopInput>({
     resolver: zodResolver(workshopSchema),
     defaultValues: { country: "Brasil" },
@@ -83,6 +89,10 @@ export function WorkshopForm({ onSaved }: { onSaved?: () => void }) {
 
   const logoUrl = watch("logoUrl")
   const zipCode = watch("zipCode")
+
+  useEffect(() => {
+    onDirtyChange?.(isDirty)
+  }, [isDirty, onDirtyChange])
 
   useEffect(() => {
     fetch("/api/workshop")
@@ -128,6 +138,7 @@ export function WorkshopForm({ onSaved }: { onSaved?: () => void }) {
       toast({ variant: "error", title: "Erro ao salvar", description: err.error ?? "Tente novamente." })
       return
     }
+    reset(data)  // limpa isDirty usando os valores recém-salvos como baseline
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
     toast({ variant: "success", title: "Dados salvos!", description: "Cadastro da oficina atualizado." })
