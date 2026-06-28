@@ -20,6 +20,9 @@ export function LoginForm() {
   const { toast } = useToast()
   const [showPassword, setShowPassword] = useState(false)
 
+  // Mostra confirmação quando vem do reset de senha
+  const resetSuccess = searchParams.get("reset") === "true"
+
   const {
     register,
     handleSubmit,
@@ -63,6 +66,15 @@ export function LoginForm() {
           </span>
           <p className="mt-2 text-sm text-slate-400">Acesse sua conta</p>
         </div>
+
+        {resetSuccess && (
+          <div className="mb-5 flex items-center gap-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 text-sm text-emerald-400">
+            <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            Senha redefinida com sucesso. Faça login com a nova senha.
+          </div>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
           {/* E-mail */}
