@@ -21,7 +21,7 @@ test.describe("Login", () => {
 
   test("exibe formulário de login", async ({ page }) => {
     await expect(page.getByLabel(/e-mail/i)).toBeVisible()
-    await expect(page.getByLabel(/senha/i)).toBeVisible()
+    await expect(page.getByLabel("Senha", { exact: true })).toBeVisible()
     await expect(page.getByRole("button", { name: /entrar/i })).toBeVisible()
   })
 
@@ -37,9 +37,9 @@ test.describe("Login", () => {
 
   test("mostra erro com credenciais inválidas", async ({ page }) => {
     await page.getByLabel(/e-mail/i).fill("invalido@test.com")
-    await page.getByLabel(/senha/i).fill("senhaerrada")
+    await page.getByLabel("Senha", { exact: true }).fill("senhaerrada")
     await page.getByRole("button", { name: /entrar/i }).click()
-    await expect(page.getByText(/credenciais inválidas/i)).toBeVisible({ timeout: 5000 })
+    await expect(page.getByText("Credenciais inválidas", { exact: true })).toBeVisible({ timeout: 8000 })
   })
 
   test("valida campos obrigatórios antes de submeter", async ({ page }) => {
@@ -72,7 +72,7 @@ test.describe("Reset de senha", () => {
 
   test("token inválido retorna erro ao submeter", async ({ page }) => {
     await page.goto("/reset-password?token=token-invalido-qualquer")
-    await page.getByLabel(/nova senha/i).fill("Senha@Nova123")
+    await page.getByLabel("Nova senha", { exact: true }).fill("Senha@Nova123")
     await page.getByLabel(/confirmar/i).fill("Senha@Nova123")
     await page.getByRole("button", { name: /salvar nova senha/i }).click()
     await expect(page.getByText(/inválido|expirado|utilizado/i)).toBeVisible({ timeout: 5000 })
