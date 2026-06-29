@@ -261,7 +261,13 @@ export function CustomersManager() {
                     <WhatsAppMenu number={c.whatsapp} />
                   )}
                   {c.email && (
-                    <p className="text-xs text-slate-500 truncate">{c.email}</p>
+                    <a
+                      href={`mailto:${c.email}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-xs text-slate-500 hover:text-slate-300 truncate transition-colors"
+                    >
+                      {c.email}
+                    </a>
                   )}
                   {c.city && (
                     <p className="text-xs text-slate-600 shrink-0">
