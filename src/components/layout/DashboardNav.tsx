@@ -13,7 +13,7 @@ interface Props {
 
 const ALL_NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: null },
-  { href: "/settings",  label: "Configurações", icon: Settings,      roles: ["ADMIN", "MANAGER"] },
+  { href: "/settings",  label: "Configurações", icon: Settings,      roles: null },
 ]
 
 function Initials({ name, email }: { name?: string | null; email?: string | null }) {
