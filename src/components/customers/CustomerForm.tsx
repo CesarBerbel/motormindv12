@@ -145,7 +145,7 @@ export function CustomerForm({ customer, onDirtyChange, onSaved }: Props) {
             <Input id="name" autoFocus placeholder="Nome completo" {...register("name")} />
             {errors.name && <p className="text-xs text-red-400">{errors.name.message}</p>}
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="document">CPF / CNPJ</Label>
               <Input
@@ -165,7 +165,7 @@ export function CustomerForm({ customer, onDirtyChange, onSaved }: Props) {
         {/* Contato */}
         <section className="space-y-4">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">Contato</p>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="phone">Telefone</Label>
               <Input
@@ -236,7 +236,7 @@ export function CustomerForm({ customer, onDirtyChange, onSaved }: Props) {
           </div>
 
           {/* Bairro + Complemento */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="neighborhood">Bairro</Label>
               <Input id="neighborhood" placeholder="Bairro" {...register("neighborhood")} />

@@ -169,7 +169,7 @@ export function WorkshopForm({
         </Field>
 
         {/* Nome Fantasia | Inscrição Estadual */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Nome Fantasia" id="tradeName">
             <Input id="tradeName" placeholder="Ex.: Silva Auto Center" {...register("tradeName")} />
           </Field>
@@ -179,7 +179,7 @@ export function WorkshopForm({
         </div>
 
         {/* CNPJ (metade da largura) */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="CNPJ" id="cnpj">
             <Input
               id="cnpj"
@@ -193,7 +193,7 @@ export function WorkshopForm({
 
       {/* ── Contato ── */}
       <Section title="Contato">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Telefone" id="phone">
             <Input
               id="phone"
@@ -211,7 +211,7 @@ export function WorkshopForm({
             />
           </Field>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="E-mail Comercial" id="email" error={errors.email?.message}>
             <Input id="email" type="email" placeholder="contato@oficina.com" {...register("email")} />
           </Field>
@@ -236,7 +236,7 @@ export function WorkshopForm({
       {/* ── Endereço ── */}
       <Section title="Endereço">
         {/* CEP + Número na mesma linha */}
-        <div className="grid grid-cols-2 gap-4 items-end">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
           <div className="space-y-1.5">
             <Label htmlFor="zipCode">CEP</Label>
             <div className="flex gap-2">
@@ -267,7 +267,7 @@ export function WorkshopForm({
         </div>
 
         {/* Logradouro | Bairro */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Logradouro" id="street">
             <Input id="street" placeholder="Rua / Av. / Rodovia" {...register("street")} />
           </Field>
@@ -282,18 +282,18 @@ export function WorkshopForm({
         </Field>
 
         {/* Cidade | UF | País */}
-        <div className="grid grid-cols-5 gap-4">
-          <div className="col-span-3">
-            <Field label="Cidade" id="city">
-              <Input id="city" placeholder="Cidade" {...register("city")} />
-            </Field>
-          </div>
+        <div className="grid grid-cols-[1fr_64px] sm:grid-cols-[3fr_1fr_1fr] gap-4">
+          <Field label="Cidade" id="city">
+            <Input id="city" placeholder="Cidade" {...register("city")} />
+          </Field>
           <Field label="UF" id="state">
             <Input id="state" placeholder="SP" maxLength={2} className="uppercase" {...register("state")} />
           </Field>
-          <Field label="País" id="country">
-            <Input id="country" placeholder="Brasil" {...register("country")} />
-          </Field>
+          <div className="hidden sm:block">
+            <Field label="País" id="country">
+              <Input id="country" placeholder="Brasil" {...register("country")} />
+            </Field>
+          </div>
         </div>
       </Section>
 

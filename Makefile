@@ -20,7 +20,7 @@ help:
 dev:
 	docker compose up --build -d
 	@echo "✓ App: http://localhost:3000"
-	@echo "✓ MailHog: http://localhost:8025"
+	@echo "✓ MailHog: http://localhost:8026"
 
 stop:
 	docker compose down

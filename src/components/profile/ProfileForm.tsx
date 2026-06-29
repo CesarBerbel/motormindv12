@@ -118,7 +118,7 @@ export function ProfileForm({ user }: { user: UserData }) {
       <div className="rounded-2xl border border-white/8 bg-white/[0.02] p-6 space-y-5">
         <h3 className="text-sm font-semibold text-white">Informações pessoais</h3>
         <form onSubmit={submitInfo(saveInfo)} noValidate className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="name">Nome completo</Label>
               <Input id="name" {...regInfo("name")} />
@@ -174,7 +174,7 @@ export function ProfileForm({ user }: { user: UserData }) {
           </div>
 
           {/* Nova senha */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="newPassword">Nova senha</Label>
               <div className="relative">

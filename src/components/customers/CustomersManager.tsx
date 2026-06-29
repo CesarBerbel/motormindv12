@@ -423,7 +423,7 @@ export function CustomersManager() {
               {/* Edit */}
               <button
                 onClick={() => openEdit(c)}
-                className="shrink-0 opacity-0 group-hover:opacity-100 size-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-white/8 transition-all"
+                className="shrink-0 sm:opacity-0 sm:group-hover:opacity-100 size-8 rounded-lg flex items-center justify-center text-slate-500 hover:text-white hover:bg-white/8 transition-all"
                 title="Editar cliente"
               >
                 <Pencil className="size-3.5" />

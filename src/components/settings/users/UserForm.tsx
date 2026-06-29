@@ -96,7 +96,7 @@ export function UserForm({ user, currentUserRole, currentUserId, onSaved, onDirt
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
 
       {/* Nome + E-mail */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="name">Nome completo *</Label>
           <Input id="name" autoFocus placeholder="Ex.: João Silva" {...register("name")} />
@@ -110,7 +110,7 @@ export function UserForm({ user, currentUserRole, currentUserId, onSaved, onDirt
       </div>
 
       {/* Telefone + Função */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label htmlFor="phone">Telefone</Label>
           <Input

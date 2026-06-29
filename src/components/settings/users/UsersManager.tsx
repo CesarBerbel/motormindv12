@@ -146,27 +146,36 @@ export function UsersManager({ currentUserId, currentUserRole }: Props) {
                     {isSelf && <span className="text-xs text-slate-500 shrink-0">(você)</span>}
                   </div>
                   <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                  {/* Badge + specialty — visible on mobile, hidden on sm (badge moves to main row) */}
+                  <div className="flex items-center gap-2 mt-0.5 sm:hidden">
+                    <RoleBadge role={user.role as Role} />
+                    {user.specialty && (
+                      <p className="text-xs text-amber-400/70 truncate">{user.specialty}</p>
+                    )}
+                  </div>
                   {user.specialty && (
-                    <p className="text-xs text-amber-400/70">{user.specialty}</p>
+                    <p className="hidden sm:block text-xs text-amber-400/70">{user.specialty}</p>
                   )}
                 </div>
 
-                {/* Role */}
-                <RoleBadge role={user.role as Role} />
+                {/* Role — desktop only */}
+                <div className="hidden sm:block">
+                  <RoleBadge role={user.role as Role} />
+                </div>
 
                 {/* Toggle ativo */}
                 <button
                   onClick={() => handleToggle(user)}
                   disabled={isSelf}
                   title={isSelf ? "Não é possível alterar o próprio status" : user.active ? "Desativar" : "Ativar"}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                  className={`flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                     user.active
                       ? "text-emerald-400 hover:bg-emerald-500/10"
                       : "text-slate-500 hover:bg-slate-700/50"
                   }`}
                 >
-                  <span className={`size-1.5 rounded-full ${user.active ? "bg-emerald-400" : "bg-slate-600"}`} />
-                  {user.active ? "Ativo" : "Inativo"}
+                  <span className={`size-2 rounded-full shrink-0 ${user.active ? "bg-emerald-400" : "bg-slate-600"}`} />
+                  <span className="hidden sm:inline">{user.active ? "Ativo" : "Inativo"}</span>
                 </button>
 
                 {/* Editar */}

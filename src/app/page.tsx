@@ -180,7 +180,7 @@ export default function HomePage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mx-auto max-w-2xl text-center relative rounded-3xl border border-brand-500/20 bg-gradient-to-b from-brand-500/8 to-transparent p-16 overflow-hidden"
+          className="mx-auto max-w-2xl text-center relative rounded-3xl border border-brand-500/20 bg-gradient-to-b from-brand-500/8 to-transparent p-8 sm:p-16 overflow-hidden"
         >
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-brand-400/40 to-transparent" />
           <div className="pointer-events-none absolute inset-0">
