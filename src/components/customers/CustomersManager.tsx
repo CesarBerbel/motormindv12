@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { Plus, Search, Pencil, Users, Phone, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -138,7 +138,11 @@ export function CustomersManager() {
   const [confirming,     setConfirming]     = useState(false)
   const [acOpen,         setAcOpen]         = useState(false)
   const [acIndex,        setAcIndex]        = useState(-1)
-  const searchRef = useRef<HTMLDivElement>(null)
+  const searchRef  = useRef<HTMLDivElement>(null)
+  // Sempre atualizado no render; lido pelo listener de keydown sem stale closure
+  const acStateRef = useRef<{ acOpen: boolean; acIndex: number; filtered: Customer[] }>({
+    acOpen: false, acIndex: -1, filtered: [],
+  })
 
   const fetchCustomers = useCallback(async () => {
     setLoading(true)
@@ -152,6 +156,7 @@ export function CustomersManager() {
 
   useEffect(() => { fetchCustomers() }, [fetchCustomers])
 
+  // Fecha ao clicar fora
   useEffect(() => {
     if (!acOpen) return
     function handler(e: MouseEvent) {
@@ -163,6 +168,39 @@ export function CustomersManager() {
     document.addEventListener("mousedown", handler)
     return () => document.removeEventListener("mousedown", handler)
   }, [acOpen])
+
+  // Navegação por teclado — listener global com deps vazias lê do ref (sem stale closure)
+  useEffect(() => {
+    function handler(e: KeyboardEvent) {
+      const { acOpen, acIndex, filtered } = acStateRef.current
+      if (!acOpen || !filtered.length) return
+      const sug = filtered.slice(0, 8)
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault()
+        setAcIndex((i) => Math.min(i + 1, sug.length - 1))
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault()
+        setAcIndex((i) => Math.max(i - 1, -1))
+      } else if (e.key === "Enter") {
+        e.preventDefault()
+        const target = acIndex >= 0 ? sug[acIndex] : sug.length === 1 ? sug[0] : null
+        if (target) {
+          setAcOpen(false)
+          setAcIndex(-1)
+          setEditingCustomer(target)
+          setFormDirty(false)
+          setConfirming(false)
+          setDrawerOpen(true)
+        }
+      } else if (e.key === "Escape") {
+        setAcOpen(false)
+        setAcIndex(-1)
+      }
+    }
+    document.addEventListener("keydown", handler)
+    return () => document.removeEventListener("keydown", handler)
+  }, []) // vazio: setters do useState são estáveis; valores lidos do ref
 
   function openNew() {
     setEditingCustomer(null)
@@ -182,25 +220,6 @@ export function CustomersManager() {
     setAcOpen(false)
     setAcIndex(-1)
     openEdit(c)
-  }
-
-  function handleSearchKey(e: React.KeyboardEvent, suggestions: Customer[]) {
-    if (!acOpen || !suggestions.length) return
-    if (e.key === "ArrowDown") {
-      e.preventDefault()
-      setAcIndex((i) => Math.min(i + 1, suggestions.length - 1))
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault()
-      setAcIndex((i) => Math.max(i - 1, -1))
-    } else if (e.key === "Enter") {
-      e.preventDefault()
-      const target = acIndex >= 0 ? suggestions[acIndex]
-        : suggestions.length === 1 ? suggestions[0] : null
-      if (target) selectSuggestion(target)
-    } else if (e.key === "Escape") {
-      setAcOpen(false)
-      setAcIndex(-1)
-    }
   }
 
   function requestClose() {
@@ -241,6 +260,9 @@ export function CustomersManager() {
   const suggestions = filtered.slice(0, 8)
   const showAc = acOpen && search.trim().length > 0 && filtered.length > 0
 
+  // Atualiza o ref a cada render para que o listener de teclado leia sempre valores frescos
+  acStateRef.current = { acOpen, acIndex, filtered }
+
   return (
     <>
       {/* Header */}
@@ -258,7 +280,6 @@ export function CustomersManager() {
               setAcIndex(-1)
             }}
             onFocus={() => { if (search.trim()) setAcOpen(true) }}
-            onKeyDown={(e) => handleSearchKey(e, suggestions)}
           />
 
           {/* Dropdown */}
