@@ -81,6 +81,24 @@ export const updateUserSchema = z.object({
   password: passwordStrength.optional().or(z.literal("")),
 })
 
+export const updateProfileSchema = z.object({
+  name: z.string().min(2, "Mínimo 2 caracteres"),
+  phone: z.string().optional(),
+})
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Senha atual obrigatória"),
+    newPassword: passwordStrength,
+    confirmPassword: z.string(),
+  })
+  .refine((d) => d.newPassword === d.confirmPassword, {
+    message: "As senhas não conferem",
+    path: ["confirmPassword"],
+  })
+
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
 export type SignInInput = z.infer<typeof signInSchema>
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>

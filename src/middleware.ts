@@ -2,7 +2,7 @@ import { auth } from "@/auth"
 import { NextResponse } from "next/server"
 
 const AUTH_ROUTES = ["/login", "/forgot-password"]
-const PROTECTED_PREFIXES = ["/dashboard", "/settings"]
+const PROTECTED_PREFIXES = ["/dashboard", "/settings", "/profile"]
 
 export default auth((req) => {
   const { pathname } = req.nextUrl
