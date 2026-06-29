@@ -1,15 +1,19 @@
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ChevronRight, Users } from "lucide-react"
+import { redirect } from "next/navigation"
 import { auth } from "@/auth"
 import { WorkshopCard } from "@/components/settings/WorkshopDrawer"
 
 export const metadata: Metadata = { title: "Configurações" }
 
+const ALLOWED = ["ADMIN", "MANAGER"]
+
 export default async function SettingsPage() {
   const session = await auth()
   const role = session?.user?.role as string
-  const canManageUsers = ["ADMIN", "MANAGER"].includes(role)
+
+  if (!ALLOWED.includes(role)) redirect("/dashboard")
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
@@ -27,9 +31,8 @@ export default async function SettingsPage() {
           <WorkshopCard />
         </div>
 
-        {/* Equipe */}
-        {canManageUsers && (
-          <div className="space-y-3">
+        {/* Equipe — todos que chegam aqui (ADMIN ou MANAGER) veem usuários */}
+        <div className="space-y-3">
             <p className="text-xs font-semibold uppercase tracking-widest text-slate-600">Equipe</p>
             <Link
               href="/settings/users"
@@ -48,7 +51,6 @@ export default async function SettingsPage() {
               <ChevronRight className="size-5 text-slate-500 group-hover:text-slate-300 group-hover:translate-x-1 transition-all shrink-0" />
             </Link>
           </div>
-        )}
       </div>
     </div>
   )

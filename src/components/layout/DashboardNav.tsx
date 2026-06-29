@@ -8,11 +8,12 @@ import { Button } from "@/components/ui/button"
 
 interface Props {
   user: { name?: string | null; email?: string | null; image?: string | null }
+  role: string
 }
 
-const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/settings", label: "Configurações", icon: Settings },
+const ALL_NAV = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: null },
+  { href: "/settings",  label: "Configurações", icon: Settings,      roles: ["ADMIN", "MANAGER"] },
 ]
 
 function Initials({ name, email }: { name?: string | null; email?: string | null }) {
@@ -30,8 +31,9 @@ function Initials({ name, email }: { name?: string | null; email?: string | null
   )
 }
 
-export function DashboardNav({ user }: Props) {
+export function DashboardNav({ user, role }: Props) {
   const pathname = usePathname()
+  const navItems = ALL_NAV.filter((item) => !item.roles || item.roles.includes(role))
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 border-b border-white/[0.07] bg-slate-950/85 backdrop-blur-md">

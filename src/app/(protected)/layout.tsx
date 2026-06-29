@@ -8,7 +8,7 @@ export default async function ProtectedLayout({ children }: { children: React.Re
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <DashboardNav user={session.user} />
+      <DashboardNav user={session.user} role={(session.user as { role?: string }).role ?? ""} />
       <main className="pt-16">{children}</main>
     </div>
   )
