@@ -23,7 +23,7 @@ interface Customer {
   neighborhood?: string | null
   city?: string | null
   state?: string | null
-  createdAt: string
+  createdAt?: string
 }
 
 function initials(name: string) {

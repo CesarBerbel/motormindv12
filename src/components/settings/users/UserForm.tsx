@@ -62,7 +62,7 @@ export function UserForm({ user, currentUserRole, currentUserId, onSaved, onDirt
   const watchRole = watch("role")
 
   async function onSubmit(data: CreateUserInput & UpdateUserInput) {
-    const body = { ...data }
+    const body: Record<string, unknown> = { ...data }
     if (isEdit && !data.password) delete body.password
 
     const res = await fetch(isEdit ? `/api/users/${user!.id}` : "/api/users", {
