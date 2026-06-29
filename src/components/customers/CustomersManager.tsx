@@ -372,7 +372,7 @@ export function CustomersManager() {
           </p>
           {!search && (
             <p className="text-slate-600 text-xs mt-1">
-              Clique em "Novo cliente" para começar
+              Clique em &quot;Novo cliente&quot; para começar
             </p>
           )}
         </div>

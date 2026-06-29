@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import Image from "next/image"
 import { Camera, X } from "lucide-react"
 
 interface LogoUploadProps {
@@ -38,7 +39,7 @@ export function LogoUpload({ value, onChange }: LogoUploadProps) {
       >
         {value ? (
           <>
-            <img src={value} alt="Logo da oficina" className="w-full h-full object-contain p-1" />
+            <Image src={value} alt="Logo da oficina" fill className="object-contain p-1" unoptimized />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
               <Camera className="size-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
