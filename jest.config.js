@@ -16,10 +16,22 @@ const config = {
     "<rootDir>/tests/integration/**/*.test.ts",
     "<rootDir>/tests/integration/**/*.test.tsx",
   ],
+  // Cobertura restrita ao que testamos com Jest:
+  // - src/app/api/**  → rotas (testadas com mocks de DB/auth)
+  // - src/lib/**      → validações, máscaras, utilitários
+  // Excluídos intencionalmente:
+  // - src/components  → componentes React (testados via Playwright/E2E)
+  // - src/app/**/page.tsx e layout.tsx → wrappers finos sem lógica
+  // - src/app/api/auth → handler do NextAuth (internals da lib)
+  // - src/lib/db.ts   → singleton do Prisma (sem lógica própria)
+  // - src/lib/email.ts → integração SMTP (requer servidor externo)
   collectCoverageFrom: [
-    "src/**/*.{ts,tsx}",
+    "src/app/api/**/*.ts",
+    "src/lib/**/*.ts",
+    "!src/app/api/auth/**",
+    "!src/lib/db.ts",
+    "!src/lib/email.ts",
     "!src/**/*.d.ts",
-    "!src/app/layout.tsx",
   ],
   coverageThreshold: {
     global: {
