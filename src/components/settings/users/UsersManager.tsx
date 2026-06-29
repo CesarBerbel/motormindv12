@@ -84,8 +84,27 @@ export function UsersManager({ currentUserId, currentUserRole }: Props) {
 
   return (
     <>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      {/* Header mobile */}
+      <div className="sm:hidden space-y-2 mb-6">
+        <Button onClick={openCreate} size="sm" className="gap-2 w-full justify-center">
+          <UserPlus className="size-4" />
+          Novo usuário
+        </Button>
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="h-10 w-full rounded-md border border-white/10 bg-slate-800 px-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+          {FILTERS.map(({ key, label }) => (
+            <option key={key} value={key} className="bg-slate-800">
+              {label}{counts[key] !== undefined ? ` (${counts[key]})` : ""}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Header desktop */}
+      <div className="hidden sm:flex items-center justify-between mb-6">
         <div className="flex gap-1 flex-wrap">
           {FILTERS.map(({ key, label }) => (
             <button

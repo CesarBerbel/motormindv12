@@ -266,8 +266,15 @@ export function CustomersManager() {
   return (
     <>
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
-        <div ref={searchRef} className="relative flex-1 max-w-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
+        {/* Botão: primeiro no mobile, último no desktop */}
+        <Button onClick={openNew} className="gap-2 shrink-0 w-full sm:w-auto justify-center order-first sm:order-last">
+          <Plus className="size-4" />
+          Novo cliente
+        </Button>
+
+        {/* Busca: abaixo do botão no mobile, antes no desktop */}
+        <div ref={searchRef} className="relative sm:flex-1 sm:max-w-sm order-last sm:order-first">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-500 pointer-events-none z-10" />
           <Input
             value={search}
@@ -338,11 +345,6 @@ export function CustomersManager() {
             </div>
           )}
         </div>
-
-        <Button onClick={openNew} className="gap-2 shrink-0">
-          <Plus className="size-4" />
-          Novo cliente
-        </Button>
       </div>
 
       {/* Count */}
