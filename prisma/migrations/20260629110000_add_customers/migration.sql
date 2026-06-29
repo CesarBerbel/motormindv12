@@ -1,0 +1,20 @@
+CREATE TABLE "customers" (
+    "id"           TEXT NOT NULL,
+    "name"         TEXT NOT NULL,
+    "document"     TEXT,
+    "email"        TEXT,
+    "phone"        TEXT,
+    "whatsapp"     TEXT,
+    "birthDate"    TEXT,
+    "notes"        TEXT,
+    "zipCode"      TEXT,
+    "street"       TEXT,
+    "number"       TEXT,
+    "complement"   TEXT,
+    "neighborhood" TEXT,
+    "city"         TEXT,
+    "state"        TEXT,
+    "createdAt"    TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt"    TIMESTAMP(3) NOT NULL,
+    CONSTRAINT "customers_pkey" PRIMARY KEY ("id")
+);

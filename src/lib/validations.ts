@@ -97,6 +97,24 @@ export const changePasswordSchema = z
     path: ["confirmPassword"],
   })
 
+export const customerSchema = z.object({
+  name:         z.string().min(2, "Nome obrigatório"),
+  document:     z.string().optional(),
+  email:        z.string().email("E-mail inválido").optional().or(z.literal("")),
+  phone:        z.string().optional(),
+  whatsapp:     z.string().optional(),
+  birthDate:    z.string().optional(),
+  notes:        z.string().optional(),
+  zipCode:      z.string().optional(),
+  street:       z.string().optional(),
+  number:       z.string().optional(),
+  complement:   z.string().optional(),
+  neighborhood: z.string().optional(),
+  city:         z.string().optional(),
+  state:        z.string().optional(),
+})
+
+export type CustomerInput = z.infer<typeof customerSchema>
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>
 export type SignInInput = z.infer<typeof signInSchema>

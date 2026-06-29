@@ -111,6 +111,28 @@ model Workshop {
   @@map("workshops")
 }
 
+model Customer {
+  id           String   @id @default(cuid())
+  name         String
+  document     String?
+  email        String?
+  phone        String?
+  whatsapp     String?
+  birthDate    String?
+  notes        String?  @db.Text
+  zipCode      String?
+  street       String?
+  number       String?
+  complement   String?
+  neighborhood String?
+  city         String?
+  state        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("customers")
+}
+
 enum Role {
   ADMIN
   MANAGER
