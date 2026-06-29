@@ -1,9 +1,16 @@
 import type { Metadata } from "next"
+import Link from "next/link"
+import { ChevronRight, Users } from "lucide-react"
+import { auth } from "@/auth"
 import { WorkshopCard } from "@/components/settings/WorkshopDrawer"
 
 export const metadata: Metadata = { title: "Configurações" }
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const session = await auth()
+  const role = session?.user?.role as string
+  const canManageUsers = ["ADMIN", "MANAGER"].includes(role)
+
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
       <div className="mb-10 relative">
@@ -13,9 +20,35 @@ export default function SettingsPage() {
         <p className="mt-1.5 text-slate-400 text-sm">Gerencie as informações do estabelecimento</p>
       </div>
 
-      <div className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-widest text-slate-600">Cadastro</p>
-        <WorkshopCard />
+      <div className="space-y-6">
+        {/* Cadastro */}
+        <div className="space-y-3">
+          <p className="text-xs font-semibold uppercase tracking-widest text-slate-600">Cadastro</p>
+          <WorkshopCard />
+        </div>
+
+        {/* Equipe */}
+        {canManageUsers && (
+          <div className="space-y-3">
+            <p className="text-xs font-semibold uppercase tracking-widest text-slate-600">Equipe</p>
+            <Link
+              href="/settings/users"
+              className="group relative w-full rounded-2xl border border-white/8 bg-white/[0.03] p-6 flex items-center gap-4 hover:border-brand-500/25 hover:bg-white/[0.06] transition-all duration-200 overflow-hidden block"
+            >
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent group-hover:via-brand-400/30 transition-all" />
+              <div className="size-12 rounded-xl bg-brand-500/10 ring-1 ring-brand-500/20 flex items-center justify-center shrink-0 group-hover:bg-brand-500/18 group-hover:ring-brand-500/35 transition-all">
+                <Users className="size-5 text-brand-400" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-semibold">Usuários e Permissões</p>
+                <p className="text-sm text-slate-400 mt-0.5">
+                  Gerentes, atendentes, mecânicos e acessos
+                </p>
+              </div>
+              <ChevronRight className="size-5 text-slate-500 group-hover:text-slate-300 group-hover:translate-x-1 transition-all shrink-0" />
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   )

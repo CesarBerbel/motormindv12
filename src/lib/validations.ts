@@ -52,7 +52,38 @@ export const workshopSchema = z.object({
   country: z.string().default("Brasil"),
 })
 
+const passwordStrength = z
+  .string()
+  .min(8, "Mínimo 8 caracteres")
+  .regex(/[A-Z]/, "Deve conter letra maiúscula")
+  .regex(/[0-9]/, "Deve conter número")
+  .regex(/[^A-Za-z0-9]/, "Deve conter caractere especial")
+
+export const ROLES = ["ADMIN", "MANAGER", "ATTENDANT", "MECHANIC"] as const
+export type Role = (typeof ROLES)[number]
+
+export const createUserSchema = z.object({
+  name: z.string().min(2, "Mínimo 2 caracteres"),
+  email: z.string().email("E-mail inválido").toLowerCase(),
+  phone: z.string().optional(),
+  role: z.enum(ROLES),
+  specialty: z.string().optional(),
+  password: passwordStrength,
+})
+
+export const updateUserSchema = z.object({
+  name: z.string().min(2, "Mínimo 2 caracteres"),
+  email: z.string().email("E-mail inválido").toLowerCase(),
+  phone: z.string().optional(),
+  role: z.enum(ROLES),
+  specialty: z.string().optional(),
+  active: z.boolean(),
+  password: passwordStrength.optional().or(z.literal("")),
+})
+
 export type SignInInput = z.infer<typeof signInSchema>
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>
 export type WorkshopInput = z.infer<typeof workshopSchema>
+export type CreateUserInput = z.infer<typeof createUserSchema>
+export type UpdateUserInput = z.infer<typeof updateUserSchema>
