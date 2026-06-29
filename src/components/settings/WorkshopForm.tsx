@@ -10,26 +10,7 @@ import { Label } from "@/components/ui/label"
 import { LogoUpload } from "@/components/ui/logo-upload"
 import { useToast } from "@/components/ui/toaster"
 import { workshopSchema, type WorkshopInput } from "@/lib/validations"
-
-// ── Máscaras ─────────────────────────────────────────────────
-function maskCNPJ(v: string) {
-  return v.replace(/\D/g, "")
-    .replace(/^(\d{2})(\d)/, "$1.$2")
-    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
-    .replace(/\.(\d{3})(\d)/, ".$1/$2")
-    .replace(/(\d{4})(\d)/, "$1-$2")
-    .slice(0, 18)
-}
-
-function maskPhone(v: string) {
-  const d = v.replace(/\D/g, "").slice(0, 11)
-  if (d.length <= 10) return d.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3").trimEnd()
-  return d.replace(/^(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3").trimEnd()
-}
-
-function maskCEP(v: string) {
-  return v.replace(/\D/g, "").replace(/^(\d{5})(\d)/, "$1-$2").slice(0, 9)
-}
+import { maskPhone, maskCNPJ, maskCEP } from "@/lib/masks"
 
 interface ViaCEPResult {
   logradouro: string

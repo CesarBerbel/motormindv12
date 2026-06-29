@@ -12,6 +12,7 @@ import {
   createUserSchema, updateUserSchema,
   type CreateUserInput, type UpdateUserInput, type Role,
 } from "@/lib/validations"
+import { maskPhone } from "@/lib/masks"
 
 const ROLE_OPTIONS: { value: Role; label: string }[] = [
   { value: "MANAGER",   label: "Gerente" },
@@ -25,12 +26,6 @@ const SPECIALTIES = [
   "Pintor Automotivo", "Borracheiro", "Ar-condicionado",
   "Injeção Eletrônica", "Cambista", "Vidraceiro",
 ]
-
-function maskPhone(v: string) {
-  const d = v.replace(/\D/g, "").slice(0, 11)
-  if (d.length <= 10) return d.replace(/^(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3").trimEnd()
-  return d.replace(/^(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3").trimEnd()
-}
 
 export type UserFormData = {
   id: string; name: string | null; email: string
