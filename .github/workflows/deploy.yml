@@ -21,14 +21,23 @@ jobs:
           cache: npm
 
       - name: Instalar dependências
-        run: npm ci
+        run: npm ci --ignore-scripts=false
 
-      - name: Rodar testes
-        run: npm test -- --passWithNoTests --ci --coverage
+      - name: Verificar tipos
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npx next lint
+
+      - name: Testes + cobertura
+        run: npx jest --passWithNoTests --ci --coverage
+
+      - name: Auditoria de segurança (somente críticas)
+        run: npm audit --audit-level=critical
 
       - name: Resumo
         if: always()
         run: |
-          echo "### Testes ${{ job.status == 'success' && '✅ OK' || '❌ Falhou' }}" >> $GITHUB_STEP_SUMMARY
+          echo "### CI ${{ job.status == 'success' && '✅ OK' || '❌ Falhou' }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
