@@ -1,7 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
-import { Plus, Search, Pencil, Users } from "lucide-react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { Plus, Search, Pencil, Users, Phone, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Drawer } from "@/components/ui/drawer"
@@ -36,6 +36,81 @@ function formatPhone(v: string | null | undefined) {
   if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`
   if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`
   return v
+}
+
+function PhoneLink({ number }: { number: string }) {
+  const digits = number.replace(/\D/g, "")
+  return (
+    <a
+      href={`tel:+55${digits}`}
+      onClick={(e) => e.stopPropagation()}
+      className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+    >
+      <Phone className="size-3 shrink-0" />
+      {formatPhone(number)}
+    </a>
+  )
+}
+
+function WhatsAppMenu({ number }: { number: string }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const digits = number.replace(/\D/g, "")
+
+  useEffect(() => {
+    if (!open) return
+    function onMouse(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    function onKey(e: KeyboardEvent) { if (e.key === "Escape") setOpen(false) }
+    document.addEventListener("mousedown", onMouse)
+    document.addEventListener("keydown", onKey)
+    return () => {
+      document.removeEventListener("mousedown", onMouse)
+      document.removeEventListener("keydown", onKey)
+    }
+  }, [open])
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={(e) => { e.stopPropagation(); setOpen((v) => !v) }}
+        className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+      >
+        <MessageCircle className="size-3 shrink-0" />
+        {formatPhone(number)}
+      </button>
+
+      <div
+        className={[
+          "absolute left-0 top-full mt-1.5 z-50 min-w-[170px] rounded-xl border border-white/10",
+          "bg-slate-900/95 backdrop-blur-sm shadow-xl shadow-black/50 overflow-hidden",
+          "transition-all duration-100 origin-top-left",
+          open ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none",
+        ].join(" ")}
+      >
+        <a
+          href={`tel:+55${digits}`}
+          onClick={() => setOpen(false)}
+          className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-slate-300 hover:bg-white/6 hover:text-white transition-colors"
+        >
+          <Phone className="size-3.5 text-slate-500" />
+          Ligar
+        </a>
+        <div className="h-px bg-white/6 mx-2" />
+        <a
+          href={`https://wa.me/55${digits}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setOpen(false)}
+          className="flex items-center gap-2.5 px-3 py-2.5 text-sm text-slate-300 hover:bg-white/6 hover:text-white transition-colors"
+        >
+          <MessageCircle className="size-3.5 text-emerald-500" />
+          Mandar mensagem
+        </a>
+      </div>
+    </div>
+  )
 }
 
 export function CustomersManager() {
@@ -176,17 +251,20 @@ export function CustomersManager() {
                     <p className="text-xs text-slate-500 shrink-0">{c.document}</p>
                   )}
                 </div>
-                <div className="flex items-center gap-3 flex-wrap mt-0.5">
-                  {(c.phone || c.whatsapp) && (
-                    <p className="text-xs text-slate-400">
-                      {formatPhone(c.phone ?? c.whatsapp)}
-                    </p>
+                <div className="flex items-center gap-3 flex-wrap mt-1">
+                  {/* Telefone (oculto se igual ao whatsapp) */}
+                  {c.phone && c.phone !== c.whatsapp && (
+                    <PhoneLink number={c.phone} />
+                  )}
+                  {/* WhatsApp com submenu */}
+                  {c.whatsapp && (
+                    <WhatsAppMenu number={c.whatsapp} />
                   )}
                   {c.email && (
                     <p className="text-xs text-slate-500 truncate">{c.email}</p>
                   )}
                   {c.city && (
-                    <p className="text-xs text-slate-600">
+                    <p className="text-xs text-slate-600 shrink-0">
                       {c.city}{c.state ? `/${c.state}` : ""}
                     </p>
                   )}

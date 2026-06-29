@@ -195,8 +195,10 @@ export function CustomerForm({ customer, onDirtyChange, onSaved }: Props) {
         {/* Endereço */}
         <section className="space-y-4">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-500">Endereço</p>
-          <div className="grid grid-cols-[1fr_auto_auto] gap-2 items-end">
-            <div className="space-y-1.5">
+
+          {/* CEP + botão buscar */}
+          <div className="flex gap-2 items-end">
+            <div className="w-36 space-y-1.5">
               <Label htmlFor="zipCode">CEP</Label>
               <Input
                 id="zipCode"
@@ -205,9 +207,7 @@ export function CustomerForm({ customer, onDirtyChange, onSaved }: Props) {
                 onChange={(e) => {
                   const masked = maskCep(e.target.value)
                   setValue("zipCode", masked, { shouldDirty: true })
-                  if (masked.replace(/\D/g, "").length === 8) {
-                    setTimeout(searchCep, 0)
-                  }
+                  if (masked.replace(/\D/g, "").length === 8) setTimeout(searchCep, 0)
                 }}
               />
             </div>
@@ -217,36 +217,43 @@ export function CustomerForm({ customer, onDirtyChange, onSaved }: Props) {
               size="icon"
               onClick={searchCep}
               disabled={cepLoading}
-              className="shrink-0"
               title="Buscar CEP"
             >
               {cepLoading ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
             </Button>
-            <div className="space-y-1.5">
-              <Label htmlFor="number">Número</Label>
-              <Input id="number" placeholder="000" className="w-24" {...register("number")} />
-            </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+
+          {/* Logradouro + Número */}
+          <div className="grid grid-cols-[1fr_96px] gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="street">Logradouro</Label>
-              <Input id="street" placeholder="Rua, Av..." {...register("street")} />
+              <Input id="street" placeholder="Rua, Avenida, Travessa..." {...register("street")} />
             </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="number">Número</Label>
+              <Input id="number" placeholder="Nº" {...register("number")} />
+            </div>
+          </div>
+
+          {/* Bairro + Complemento */}
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="neighborhood">Bairro</Label>
               <Input id="neighborhood" placeholder="Bairro" {...register("neighborhood")} />
             </div>
-          </div>
-          <div className="grid grid-cols-[1fr_auto_1fr] gap-4">
-            <div className="space-y-1.5 col-span-1">
+            <div className="space-y-1.5">
               <Label htmlFor="complement">Complemento</Label>
-              <Input id="complement" placeholder="Apto, sala..." {...register("complement")} />
+              <Input id="complement" placeholder="Apto, sala, bloco..." {...register("complement")} />
             </div>
-            <div className="space-y-1.5 col-span-1">
+          </div>
+
+          {/* Cidade + UF */}
+          <div className="grid grid-cols-[1fr_64px] gap-3">
+            <div className="space-y-1.5">
               <Label htmlFor="city">Cidade</Label>
               <Input id="city" placeholder="Cidade" {...register("city")} />
             </div>
-            <div className="space-y-1.5 w-20">
+            <div className="space-y-1.5">
               <Label htmlFor="state">UF</Label>
               <Input id="state" placeholder="SP" maxLength={2} className="uppercase" {...register("state")} />
             </div>
