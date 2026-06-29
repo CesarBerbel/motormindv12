@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import { Plus, Search, Pencil, Users, Phone, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -49,6 +49,21 @@ function PhoneLink({ number }: { number: string }) {
       <Phone className="size-3 shrink-0" />
       {formatPhone(number)}
     </a>
+  )
+}
+
+function highlight(text: string, q: string) {
+  if (!q.trim()) return <>{text}</>
+  const esc = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+  const parts = text.split(new RegExp(`(${esc})`, "gi"))
+  return (
+    <>
+      {parts.map((p, i) =>
+        p.toLowerCase() === q.toLowerCase()
+          ? <mark key={i} className="bg-brand-500/25 text-brand-200 rounded-sm not-italic">{p}</mark>
+          : p
+      )}
+    </>
   )
 }
 
@@ -121,6 +136,9 @@ export function CustomersManager() {
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null)
   const [formDirty,      setFormDirty]      = useState(false)
   const [confirming,     setConfirming]     = useState(false)
+  const [acOpen,         setAcOpen]         = useState(false)
+  const [acIndex,        setAcIndex]        = useState(-1)
+  const searchRef = useRef<HTMLDivElement>(null)
 
   const fetchCustomers = useCallback(async () => {
     setLoading(true)
@@ -134,6 +152,18 @@ export function CustomersManager() {
 
   useEffect(() => { fetchCustomers() }, [fetchCustomers])
 
+  useEffect(() => {
+    if (!acOpen) return
+    function handler(e: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setAcOpen(false)
+        setAcIndex(-1)
+      }
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [acOpen])
+
   function openNew() {
     setEditingCustomer(null)
     setFormDirty(false)
@@ -146,6 +176,31 @@ export function CustomersManager() {
     setFormDirty(false)
     setConfirming(false)
     setDrawerOpen(true)
+  }
+
+  function selectSuggestion(c: Customer) {
+    setAcOpen(false)
+    setAcIndex(-1)
+    openEdit(c)
+  }
+
+  function handleSearchKey(e: React.KeyboardEvent, suggestions: Customer[]) {
+    if (!acOpen || !suggestions.length) return
+    if (e.key === "ArrowDown") {
+      e.preventDefault()
+      setAcIndex((i) => Math.min(i + 1, suggestions.length - 1))
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault()
+      setAcIndex((i) => Math.max(i - 1, -1))
+    } else if (e.key === "Enter") {
+      e.preventDefault()
+      const target = acIndex >= 0 ? suggestions[acIndex]
+        : suggestions.length === 1 ? suggestions[0] : null
+      if (target) selectSuggestion(target)
+    } else if (e.key === "Escape") {
+      setAcOpen(false)
+      setAcIndex(-1)
+    }
   }
 
   function requestClose() {
@@ -183,19 +238,86 @@ export function CustomersManager() {
     )
   })
 
+  const suggestions = filtered.slice(0, 8)
+  const showAc = acOpen && search.trim().length > 0 && filtered.length > 0
+
   return (
     <>
       {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-500 pointer-events-none" />
+        <div ref={searchRef} className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-500 pointer-events-none z-10" />
           <Input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar por nome, CPF, e-mail..."
+            autoComplete="off"
+            placeholder="Buscar por nome, CPF, e-mail, telefone..."
             className="pl-9"
+            onChange={(e) => {
+              setSearch(e.target.value)
+              setAcOpen(true)
+              setAcIndex(-1)
+            }}
+            onFocus={() => { if (search.trim()) setAcOpen(true) }}
+            onKeyDown={(e) => handleSearchKey(e, suggestions)}
           />
+
+          {/* Dropdown */}
+          {showAc && (
+            <div className="absolute left-0 right-0 top-full mt-1.5 z-50 rounded-xl border border-white/10 bg-slate-900/98 backdrop-blur-sm shadow-2xl shadow-black/60 overflow-hidden">
+              <ul role="listbox" className="max-h-72 overflow-y-auto py-1">
+                {suggestions.map((c, i) => {
+                  const active = i === acIndex
+                  const phoneDisplay = formatPhone(c.phone ?? c.whatsapp)
+                  return (
+                    <li key={c.id} role="option" aria-selected={active}>
+                      <button
+                        onMouseDown={(e) => { e.preventDefault(); selectSuggestion(c) }}
+                        onMouseEnter={() => setAcIndex(i)}
+                        className={[
+                          "w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors",
+                          active ? "bg-white/8" : "hover:bg-white/4",
+                        ].join(" ")}
+                      >
+                        <div className="size-8 rounded-full bg-brand-500/15 ring-1 ring-brand-500/20 flex items-center justify-center shrink-0">
+                          <span className="text-xs font-semibold text-brand-300">{initials(c.name)}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-white font-medium truncate">
+                            {highlight(c.name, search)}
+                          </p>
+                          <div className="flex items-center gap-2.5 mt-0.5 flex-wrap">
+                            {c.document && (
+                              <span className="text-xs text-slate-500">{highlight(c.document, search)}</span>
+                            )}
+                            {phoneDisplay && (
+                              <span className="text-xs text-slate-500">{highlight(phoneDisplay, search)}</span>
+                            )}
+                            {c.email && (
+                              <span className="text-xs text-slate-600 truncate">{highlight(c.email, search)}</span>
+                            )}
+                          </div>
+                        </div>
+                        {c.city && (
+                          <span className="text-xs text-slate-600 shrink-0 hidden sm:block">
+                            {c.city}{c.state ? `/${c.state}` : ""}
+                          </span>
+                        )}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+              {filtered.length > 8 && (
+                <div className="px-3 py-2 border-t border-white/6">
+                  <p className="text-xs text-slate-600">
+                    +{filtered.length - 8} resultado{filtered.length - 8 !== 1 ? "s" : ""} — continue digitando para refinar
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
+
         <Button onClick={openNew} className="gap-2 shrink-0">
           <Plus className="size-4" />
           Novo cliente
